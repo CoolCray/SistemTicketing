@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('nama_paket');
             $table->foreignId('makanan_id')->constrained('makanan')->cascadeOnDelete();
             $table->foreignId('minuman_id')->constrained('minuman')->cascadeOnDelete();
-            $table->foreignId('additional_id')->constrained('additional')->cascadeOnDelete();
             $table->integer('harga');
             $table->timestamps();
         });
