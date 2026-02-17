@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaksi', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pelanggan_id')->contrained('pelanggan')->cascadeOnDelete();
-            $table->foreignId('kursi_id')->constrained('kursi')->cascadeOnDelete();
-            $table->foreignId('paket_id')->constrained('paket')->cascadeOnDelete();
+            $table->string('name');
+            $table->decimal('price', 8, 2);
+            $table->foreignId('food_id')->constrained('foods')->onDelete('cascade');
+            $table->foreignId('drink_id')->constrained('drinks')->onDelete('cascade');
+            $table->integer('total_seats');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksi');
+        Schema::dropIfExists('packages');
     }
 };

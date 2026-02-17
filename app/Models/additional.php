@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Transaction_Additional;
 use Illuminate\Database\Eloquent\Model;
 
-class additional extends Model
+class Additional extends Model
 {
-    protected $table = 'additional';
 
-    protected $fillable = [
-        'nama_additional',
-    ];
+    protected $table = 'additionals';
+
+    protected $fillable = ['name', 'price'];
+
+    public function transaction_additionals()
+    {
+        return $this->belongsToMany(transaction_additional::class);
+    }
 }

@@ -1,13 +1,32 @@
 <template>
-    <div class="">
-        <!-- <Sidebar /> -->
-        <Login />
+    <div class="main-container">
+        <div class="flex" v-if="router.currentRoute.value.name !== 'login'">
+            <sidebar />
+            <router-view></router-view>
+        </div>
+        <div class="w-full" v-else>
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
 <script setup>
-import Sidebar from './Layouts/Sidebar.vue';
-import Login from './Pages/Auth/Login.vue';
+import sidebar from './Layouts/Sidebar.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+const token = localStorage.getItem('token');
+const routerName = router.currentRoute.value.name;
+
+if (!token) {
+    router.push('/');
+}
+
+if(routerName == 'login' && token){
+    router.push(routerName);
+}
+
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

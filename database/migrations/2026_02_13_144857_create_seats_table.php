@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaksi_additionals', function (Blueprint $table) {
+        Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaksi_id')->constrained('transaksi')->cascadeOnDelete();
-            $table->foreignId('additional_id')->constrained('additional')->cascadeOnDelete();
+            $table->string('seat_number');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('transaksi_additionals');
+        Schema::dropIfExists('seats');
     }
 };
