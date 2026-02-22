@@ -10,7 +10,8 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
     --color-SilverDamar: #F5F7FA;
-    --color-OrenDamar: #f25e30
+    --color-OrenDamar: #f25829;
+    --color-kuningDamar: #f7951e;
 }
 
 @layer base {

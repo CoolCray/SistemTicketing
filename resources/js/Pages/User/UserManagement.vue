@@ -3,16 +3,16 @@
 
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="font-bold text-2xl text-gray-800">
-                Customer Management
+                User Management
             </h1>
 
             <div class="flex gap-2">
                 <div>
-                    <input type="text" placeholder="Cari Customer" v-model="search" @keyup.enter="searchUser"
+                    <input type="text" placeholder="Cari User" v-model="search" @keyup.enter="searchUser"
                         class="bg-white w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                 </div>
 
-                <ButtonBiru text="Tambah Customer" @click="openModal" />
+                <ButtonBiru text="Tambah User" @click="openModal" />
             </div>
 
         </div>
@@ -24,11 +24,8 @@
                     <thead class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200">
                         <tr>
                             <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Nama</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Username</th>
                             <th scope="col" class="px-6 py-4 font-bold">Email</th>
-                            <th scope="col" class="px-6 py-4 font-bold">No HP</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Nama Anak</th>
-                            <th scope="col" class="px-6 py-4 font-bold">NIS</th>
                             <th scope="col" class="px-6 py-4 font-bold text-center w-48">Aksi</th>
                         </tr>
                     </thead>
@@ -36,36 +33,27 @@
                     <tbody>
                         <tr v-if="!data.data || data.data.length === 0">
                             <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                                Belum ada data Customer yang terdaftar.
+                                Belum ada data user yang terdaftar.
                             </td>
                         </tr>
 
                         <tr v-else v-for="(item, index) in data.data" :key="item.id || index"
-                            class="hover:bg-blue-50 transition duration-150">
+                            class=" hover:bg-blue-50 transition duration-150">
                             <td class="px-6 py-4 font-medium text-gray-900">
                                 {{ index + 1 }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-700">
-                                {{ item.name }}
+                                {{ item.username }}
                             </td>
                             <td class="px-6 py-4 text-gray-500">
                                 {{ item.email }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ item.phone_number }}
-                            </td>
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ item.name_student }}
-                            </td>
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ item.nis }}
-                            </td>
                             <td class="px-6 py-4 flex justify-center gap-3">
-                                <button @click="editCustomer(item)"
+                                <button @click="updateUser(item)"
                                     class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
                                     Edit
                                 </button>
-                                <button @click="deleteCustomer(item.id)"
+                                <button @click="deleteUser(item.id)"
                                     class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
                                     Hapus
                                 </button>
@@ -78,24 +66,24 @@
         </div>
 
     </div>
-
-    <ModalCustomer v-if="showModal" @close="closeModal" @fetchCustomer="fetchCustomer" :isEdit="isEdit" :customerSelected="customerSelected" />
+    
+    <ModalUser v-if="showModal" :showModal="showModal" @close="closeModal" @fetchUser="fetchUser" :isEdit="isEdit" :userSelected="userSelected" />
 </template>
 
 <script setup>
 import ButtonBiru from '../../Components/ButtonBiru.vue';
-import ModalCustomer from './ModalCustomer.vue';
-import { useRouter } from 'vue-router';
+import ModalUser from './ModalUser.vue';
 import { ref, onMounted } from 'vue';
-const data = ref([]);
 
+const data = ref([]);
+const search = ref('');
 const showModal = ref(false);
 const isEdit = ref(false);
-const customerSelected = ref(null);
+const userSelected = ref(null);
 
-const fetchCustomer = async () => {
+const fetchUser = async () => {
     try{
-        const response = await axios.get('api/customer');
+        const response = await axios.get('api/user');
         data.value = response.data;
     }
     catch(error){
@@ -104,37 +92,45 @@ const fetchCustomer = async () => {
 
 };
 
-const deleteCustomer = async (id)=>{
+const deleteUser = async (id) => {
     try{
-        const response = await axios.delete(`api/customer/${id}`);
-        fetchCustomer();
+        const response = await axios.delete(`api/user/${id}`);
+        fetchUser();
     }
     catch(error){
         console.log(error);
     }
-}
 
-const editCustomer = async (item)=>{
-    showModal.value = true;
-    isEdit.value = true;
-    customerSelected.value = item;
-}
+};
 
+const updateUser = async (item) => {
+    try{
+        userSelected.value = item;
+        isEdit.value = true;
+        showModal.value = true;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+};
 
 const openModal = () => {
-    showModal.value = true;
     isEdit.value = false;
-    customerSelected.value = null;
-}
+    userSelected.value = null;
+    showModal.value = true;
+};
 
 const closeModal = () => {
     showModal.value = false;
-    isEdit.value = false;
-    customerSelected.value = null;
-}
+};
 
 onMounted(() => {
-    fetchCustomer();
+    fetchUser();
 });
 
+
+
 </script>
+
+<style scoped></style>

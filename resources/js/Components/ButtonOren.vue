@@ -1,6 +1,6 @@
 <template>
     <button type="submit"
-        class="bg-OrenDamar font-medium transition-all duration-300 hover:bg-OrenDamar/80 text-white py-2 px-4 rounded-md">{{ text
+        class="bg-orange-500 font-medium transition-all duration-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md">{{ text
         }}</button>
 </template>
 
