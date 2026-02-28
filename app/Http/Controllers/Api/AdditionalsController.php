@@ -14,6 +14,7 @@ class AdditionalsController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'message' => 'Data additional berhasil diambil',
             'data' => $data,
 
         ], 200);
@@ -32,6 +33,7 @@ class AdditionalsController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'message' => 'Data additional berhasil ditambahkan',
             'data' => $additional,
 
         ], 200);
@@ -47,24 +49,48 @@ class AdditionalsController extends Controller
         );
 
         $additional = Additional::find($id);
-        $additional->update($validated);
+
+        if($additional)
+        {
+            $additional->update($validated);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data additional berhasil diupdate',
+                'data' => $additional,
+
+            ], 200);
+        }
 
         return response()->json([
-            'status' => 'success',
-            'data' => $additional,
+            'status' => 'error',
+            'message' => 'Data additional tidak ditemukan',
 
-        ], 200);
+        ], 404);
+
     }
 
     public function destroy($id)
     {
         $additional = Additional::find($id);
-        $additional->delete();
+
+        if($additional)
+        {
+            $additional->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data additional berhasil dihapus',
+                'data' => $additional,
+
+            ], 200);
+        }
 
         return response()->json([
-            'status' => 'success',
-            'data' => $additional,
+            'status' => 'error',
+            'message' => 'Data additional tidak ditemukan',
 
-        ], 200);
+        ], 404);
+
     }
 }

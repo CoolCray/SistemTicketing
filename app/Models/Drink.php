@@ -13,6 +13,6 @@ class Drink extends Model
 
     public function packages()
     {
-        return $this->belongsTo(Package::class);
+        return $this->belongsToMany(Package::class);
     }
 }

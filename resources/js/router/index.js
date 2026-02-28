@@ -8,6 +8,9 @@ import PackagesManagement from '../Pages/Packages/PackagesManagement.vue';
 import UserManagement from '../Pages/User/UserManagement.vue';
 import SeatManagement from '../Pages/Seat/SeatManagement.vue';
 import AttendanceManagement from '../Pages/Attendance/AttendanceManagement.vue';
+import FoodManagement from '../Pages/Food/FoodManagement.vue';
+import DrinkManagement from '../Pages/Drink/DrinkManagement.vue';
+import AdditionalManagement from '../Pages/Additional/AdditionalManagement.vue';
 
 const routes = [
     {
@@ -15,6 +18,7 @@ const routes = [
         name: 'login',
         component: Login
     },
+
     {
         path: '/dashboard',
         name: 'dashboard',
@@ -44,6 +48,21 @@ const routes = [
         path: '/attendance',
         name: 'attendance',
         component:AttendanceManagement
+    },
+    {
+        path: '/food',
+        name: 'food',
+        component:FoodManagement
+    },
+    {
+        path: '/drink',
+        name: 'drink',
+        component:DrinkManagement
+    },
+    {
+        path: '/additional',
+        name: 'additional',
+        component:AdditionalManagement
     }
 ];
 

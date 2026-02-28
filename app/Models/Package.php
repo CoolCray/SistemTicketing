@@ -14,6 +14,8 @@ class Package extends Model
         'name', 
         'price', 
         'total_seats',
+        'food_id',
+        'drink_id'
     ];
     
     public function foods()

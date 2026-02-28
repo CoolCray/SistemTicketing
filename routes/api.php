@@ -35,44 +35,44 @@ Route::delete('/customer/{id}', [CustomerController::class, 'destroy']);
 // Packages Routes
 Route::get('/packages', [PackagesController::class, 'index']);
 Route::post('/packages', [PackagesController::class, 'store']);
-Route::put('/packages/{id}', [PackagesController::class, 'update']);
+Route::post('/packages/{id}', [PackagesController::class, 'update']);
 Route::delete('/packages/{id}', [PackagesController::class, 'destroy']);
 
 // Attendance Routes
 Route::get('/attendance', [AttendanceController::class, 'index']);
 Route::post('/attendance', [AttendanceController::class, 'store']);
-Route::put('/attendance/{id}', [AttendanceController::class, 'update']);
+Route::post('/attendance/{id}', [AttendanceController::class, 'update']);
 Route::delete('/attendance/{id}', [AttendanceController::class, 'destroy']);
 
 //Seats Routes
 Route::get('/seats', [SeatsController::class, 'index']);
 Route::post('/seats', [SeatsController::class, 'store']);
-Route::put('/seats/{id}', [SeatsController::class, 'update']);
+Route::post('/seats/{id}', [SeatsController::class, 'update']);
 Route::delete('/seats/{id}', [SeatsController::class, 'destroy']);
 
 // Additional Routes
 Route::get('/additionals', [AdditionalsController::class, 'index']);
 Route::post('/additionals', [AdditionalsController::class, 'store']);
-Route::put('/additionals/{id}', [AdditionalsController::class, 'update']);
+Route::post('/additionals/{id}', [AdditionalsController::class, 'update']);
 Route::delete('/additionals/{id}', [AdditionalsController::class, 'destroy']);
 
 
 // Food Routes
 Route::get('/foods', [FoodsController::class, 'index']);
 Route::post('/foods', [FoodsController::class, 'store']);
-Route::put('/foods/{id}', [FoodsController::class, 'update']);
+Route::post('/foods/{id}', [FoodsController::class, 'update']);
 Route::delete('/foods/{id}', [FoodsController::class, 'destroy']);
 
 // Drink Routes
 Route::get('/drinks', [DrinksController::class, 'index']);
 Route::post('/drinks', [DrinksController::class, 'store']);
-Route::put('/drinks/{id}', [DrinksController::class, 'update']);
+Route::post('/drinks/{id}', [DrinksController::class, 'update']);
 Route::delete('/drinks/{id}', [DrinksController::class, 'destroy']);
 
 // Transaction Routes
 Route::get('/transactions', [TransactionsController::class, 'index']);
 Route::post('/transactions', [TransactionsController::class, 'store']);
-Route::put('/transactions/{id}', [TransactionsController::class, 'update']);
+Route::post('/transactions/{id}', [TransactionsController::class, 'update']);
 Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy']);
 
 
