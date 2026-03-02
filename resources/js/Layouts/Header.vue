@@ -1,5 +1,5 @@
 <template>
-    <header class="h-20 w-full bg-white border-b border-gray-100 px-8">
+    <header class="h-20 w-full bg-white border-b border-gray-200 shadow-sm shadow-sm px-8">
         <div class="flex justify-between items-center h-full">
             <div>
                 <h2 class="text-sm font-medium text-gray-400">Selamat Datang kembali,</h2>

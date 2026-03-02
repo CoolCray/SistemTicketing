@@ -10,12 +10,10 @@ class FoodsController extends Controller
 {
     public function index()
     {
-        $foods = Food::all();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data Makanan berhasil diambil',
-            'data' => $foods
-        ], 200);
+        if (request()->query('all')) {
+            return Food::all();
+        }
+        return Food::paginate(10);
     }
 
     public function store(Request $request)
@@ -23,9 +21,8 @@ class FoodsController extends Controller
         $request->validate([
             'name' => 'required',
         ]);
-        
-        if($request)
-        {
+
+        if ($request) {
             $food = Food::create($request->all());
             return response()->json([
                 'status' => 'success',
@@ -48,8 +45,7 @@ class FoodsController extends Controller
 
         $food = Food::find($id);
 
-        if($food)
-        {
+        if ($food) {
             $food->update($request->all());
             return response()->json([
                 'status' => 'success',
@@ -67,8 +63,7 @@ class FoodsController extends Controller
     public function destroy($id)
     {
         $food = Food::find($id);
-        if($food)
-        {
+        if ($food) {
             $food->delete();
             return response()->json([
                 'status' => 'success',
@@ -81,5 +76,12 @@ class FoodsController extends Controller
             'status' => 'error',
             'message' => 'Data Makanan tidak ditemukan',
         ], 404);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        return Food::where('name', 'like', "%{$query}%")->paginate(10);
     }
 }

@@ -10,13 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = User::all();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $user,
-
-        ], 200);
+        return User::paginate(10);
     }
 
     public function store(Request $request)
@@ -24,7 +18,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'username' => 'required',
             'email' => 'required',
-            'password'=> 'required|min:8',
+            'password' => 'required|min:8',
 
         ]);
 
@@ -42,7 +36,7 @@ class UserController extends Controller
 
         $user = User::find($id);
 
-        if($user){
+        if ($user) {
             $user->update($request->all());
 
             return response()->json([
@@ -57,13 +51,12 @@ class UserController extends Controller
             'message' => 'User not found',
 
         ], 404);
- 
     }
 
     public function destroy($id)
     {
         $user = User::find($id);
-        if($user){
+        if ($user) {
             $user->delete();
             return response()->json([
                 'status' => 'success',
@@ -76,5 +69,14 @@ class UserController extends Controller
             'message' => 'User not found',
 
         ], 404);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        return User::where('username', 'like', "%$query%")
+            ->orWhere('email', 'like', "%$query%")
+            ->paginate(10);
     }
 }

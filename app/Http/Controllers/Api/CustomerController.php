@@ -10,14 +10,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customer = Customer::all();
-        
-        return response()->json([
-            'status' => 'success',
-            'data' => $customer,
-
-        ], 200);
-
+        return Customer::paginate(10);
     }
 
     public function store(Request $request)
@@ -51,7 +44,7 @@ class CustomerController extends Controller
 
         $customer = Customer::find($id);
 
-        if($customer){
+        if ($customer) {
             $customer->update($validated);
             return response()->json([
                 'status' => 'success',
@@ -65,8 +58,6 @@ class CustomerController extends Controller
             'message' => 'Customer not found',
 
         ], 404);
-
-
     }
 
 
@@ -74,20 +65,30 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
 
-        if($customer)
-        {
-          $customer->delete();
+        if ($customer) {
+            $customer->delete();
 
-          return response()->json([
-            'status' => 'success',
-            'message' => 'Customer deleted succces'
-          ], 200);
-
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Customer deleted succces'
+            ], 200);
         }
 
         return response()->json([
             'status' => 'error',
-            'message' =>'Customer not Found'
+            'message' => 'Customer not Found'
         ], 404);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        return Customer::where('name', 'like', "%{$query}%")
+            ->orWhere('email', 'like', "%{$query}%")
+            ->orWhere('phone_number', 'like', "%{$query}%")
+            ->orWhere('nis', 'like', "%{$query}%")
+            ->orWhere('name_student', 'like', "%{$query}%")
+            ->paginate(10);
     }
 }

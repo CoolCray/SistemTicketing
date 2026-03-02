@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 md:p-10 ">
+    <div class="px-6 md:px-10 pt-10 ">
 
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="font-bold text-2xl text-gray-800">
@@ -8,7 +8,7 @@
 
             <div class="flex gap-2">
                 <div>
-                    <input type="text" placeholder="Cari Package" v-model="search" @keyup.enter="searchUser"
+                    <input type="text" placeholder="Cari Package" v-model="search" @keyup.enter="searchPackage"
                         class="bg-white w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                 </div>
 
@@ -17,11 +17,13 @@
 
         </div>
 
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
+        <div
+            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-260px)] mt-4">
+            <div class="overflow-auto flex-1">
+                <table class="w-full text-sm text-left text-gray-600 relative">
 
-                    <thead class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200">
+                    <thead
+                        class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                         <tr>
                             <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
                             <th scope="col" class="px-6 py-4 font-bold">Nama Package</th>
@@ -49,16 +51,16 @@
                                 {{ item.name }}
                             </td>
                             <td class="px-6 py-4 text-gray-500">
-                                {{ item.price }}
+                                {{ formatRupiah(item.price) }}
                             </td>
                             <td class="px-6 py-4 text-gray-500">
                                 {{ item.total_seats }}
                             </td>
                             <td class="px-6 py-4 text-gray-500">
-                                {{ item.foods }}
+                                {{ item.food ? item.food.name : '-' }}
                             </td>
                             <td class="px-6 py-4 text-gray-500">
-                                {{ item.drinks }}
+                                {{ item.drink ? item.drink.name : '-' }}
                             </td>
                             <td class="px-6 py-4 flex justify-center gap-3">
                                 <button @click="editPackage(item)"
@@ -77,6 +79,8 @@
             </div>
         </div>
 
+        <Pagination :currentPage="data.current_page" :totalPages="data.last_page" @update:page="fetchPackage" />
+
     </div>
 
     <ModalPackage v-if="showModal" @close="closeModal" @fetchPackage="fetchPackage" :isEdit="isEdit"
@@ -84,30 +88,48 @@
 </template>
 
 <script setup>
+import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalPackage from './ModalPackage.vue';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 const data = ref([]);
+const search = ref('');
 
 const showModal = ref(false);
 const isEdit = ref(false);
 const PackageSelected = ref(null);
 
-const fetchPackage = async () => {
+const searchPackage = async (page = 1) => {
     try {
-        const response = await axios.get('api/Packages');
+        const response = await axios.get(`api/packages/search?query=${search.value}&page=${page}`);
+        data.value = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const fetchPackage = async (page = 1) => {
+    try {
+        const response = await axios.get(`api/packages?page=${page}`);
         data.value = response.data;
     }
     catch (error) {
         console.log(error);
     }
-
 };
+
+
+function formatRupiah(angka) {
+    var reverse = angka.toString().split('').reverse().join(''),
+        ribuan = reverse.match(/\d{1,3}/g);
+    ribuan = ribuan.join('.').split('').reverse().join('');
+    return 'Rp ' + ribuan;
+}
 
 const deletePackage = async (id) => {
     try {
-        const response = await axios.delete(`api/Packages/${id}`);
+        const response = await axios.delete(`api/packages/${id}`);
         fetchPackage();
     }
     catch (error) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 md:p-10 ">
+    <div class="px-6 md:px-10 pt-10 ">
 
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="font-bold text-2xl text-gray-800">
@@ -8,7 +8,7 @@
 
             <div class="flex gap-2">
                 <div>
-                    <input type="text" placeholder="Cari User" v-model="search" @keyup.enter="searchUser"
+                    <input type="text" placeholder="Cari User" v-model="search" @keyup="searchUser"
                         class="bg-white w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                 </div>
 
@@ -17,11 +17,12 @@
 
         </div>
 
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
-
-                    <thead class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200">
+        <div
+            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-260px)] mt-4">
+            <div class="overflow-auto flex-1">
+                <table class="w-full text-sm text-left text-gray-600 relative">
+                    <thead
+                        class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                         <tr>
                             <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
                             <th scope="col" class="px-6 py-4 font-bold">Username</th>
@@ -65,12 +66,16 @@
             </div>
         </div>
 
+        <Pagination :currentPage="data.current_page" :totalPages="data.last_page" @update:page="fetchUser" />
+
     </div>
-    
-    <ModalUser v-if="showModal" :showModal="showModal" @close="closeModal" @fetchUser="fetchUser" :isEdit="isEdit" :userSelected="userSelected" />
+
+    <ModalUser v-if="showModal" :showModal="showModal" @close="closeModal" @fetchUser="fetchUser" :isEdit="isEdit"
+        :userSelected="userSelected" />
 </template>
 
 <script setup>
+import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalUser from './ModalUser.vue';
 import { ref, onMounted } from 'vue';
@@ -80,36 +85,47 @@ const search = ref('');
 const showModal = ref(false);
 const isEdit = ref(false);
 const userSelected = ref(null);
+const currentPage = ref(1);
+const totalPages = ref(10);
 
-const fetchUser = async () => {
-    try{
-        const response = await axios.get('api/user');
+const searchUser = async (page = 1) => {
+    try {
+        const response = await axios.get(`api/user/search?query=${search.value}&page=${page}`);
         data.value = response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
     }
+};
 
+const fetchUser = async (page = 1) => {
+    try {
+        const response = await axios.get(`api/user?page=${page}`);
+        data.value = response.data;
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 
 const deleteUser = async (id) => {
-    try{
+    try {
         const response = await axios.delete(`api/user/${id}`);
         fetchUser();
     }
-    catch(error){
+    catch (error) {
         console.log(error);
     }
 
 };
 
 const updateUser = async (item) => {
-    try{
+    try {
         userSelected.value = item;
         isEdit.value = true;
         showModal.value = true;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
     }
 

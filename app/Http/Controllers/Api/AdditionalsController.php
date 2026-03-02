@@ -10,14 +10,7 @@ class AdditionalsController extends Controller
 {
     public function index()
     {
-        $data = Additional::all();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data additional berhasil diambil',
-            'data' => $data,
-
-        ], 200);
+        return Additional::paginate(10);
     }
 
     public function store(Request $request)
@@ -50,8 +43,7 @@ class AdditionalsController extends Controller
 
         $additional = Additional::find($id);
 
-        if($additional)
-        {
+        if ($additional) {
             $additional->update($validated);
 
             return response()->json([
@@ -67,15 +59,13 @@ class AdditionalsController extends Controller
             'message' => 'Data additional tidak ditemukan',
 
         ], 404);
-
     }
 
     public function destroy($id)
     {
         $additional = Additional::find($id);
 
-        if($additional)
-        {
+        if ($additional) {
             $additional->delete();
 
             return response()->json([
@@ -91,6 +81,12 @@ class AdditionalsController extends Controller
             'message' => 'Data additional tidak ditemukan',
 
         ], 404);
+    }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        return Additional::where('name', 'like', '%' . $query . '%')->paginate(10);
     }
 }

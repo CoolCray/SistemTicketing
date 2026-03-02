@@ -10,12 +10,7 @@ class PackagesController extends Controller
 {
     public function index()
     {
-        $data = Package::all();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil diambil',
-            'data' => $data
-        ]);
+        return Package::with(['food', 'drink'])->paginate(10);
     }
 
     public function store(Request $request)
@@ -24,7 +19,7 @@ class PackagesController extends Controller
             [
                 'name' => 'required',
                 'price' => 'required',
-                'total_seats'=> 'required'
+                'total_seats' => 'required'
 
             ]
         );
@@ -42,20 +37,18 @@ class PackagesController extends Controller
 
         $data = Package::find($id);
 
-        if($data)
-            {
+        if ($data) {
             $data->update($request->all());
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate',
                 'data' => $data
             ]);
-            }
+        }
         return response()->json([
-            'status'=> 'error',
-            'message'=> 'Package tidak ditemukan'
-        ],404);
-
+            'status' => 'error',
+            'message' => 'Package tidak ditemukan'
+        ], 404);
     }
 
     public function destroy($id)
@@ -75,5 +68,11 @@ class PackagesController extends Controller
             'status' => 'error',
             'message' => 'Package tidak ditemukan'
         ], 404);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        return Package::with(['food', 'drink'])->where('name', 'like', "%{$query}%")->paginate(10);
     }
 }

@@ -11,20 +11,20 @@ class Package extends Model
     protected $table = 'packages';
 
     protected $fillable = [
-        'name', 
-        'price', 
+        'name',
+        'price',
         'total_seats',
         'food_id',
         'drink_id'
     ];
-    
-    public function foods()
+
+    public function food()
     {
-        return $this->hasMany(Food::class);
+        return $this->belongsTo(Food::class, 'food_id');
     }
 
-    public function drinks()
+    public function drink()
     {
-        return $this->hasMany(Drink::class);
+        return $this->belongsTo(Drink::class, 'drink_id');
     }
 }

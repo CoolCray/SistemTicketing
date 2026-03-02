@@ -23,6 +23,7 @@ Route::get('/user', [UserController::class, 'index']);
 Route::post('/user', [UserController::class, 'store']);
 Route::post('/user/{id}', [UserController::class, 'update']);
 Route::delete('/user/{id}', [UserController::class, 'destroy']);
+Route::get('/user/search', [UserController::class, 'search']);
 
 
 // Customer Routes  
@@ -30,6 +31,7 @@ Route::get('/customer', [CustomerController::class, 'index']);
 Route::post('/customer', [CustomerController::class, 'store']);
 Route::post('/customer/{id}', [CustomerController::class, 'update']);
 Route::delete('/customer/{id}', [CustomerController::class, 'destroy']);
+Route::get('customer/search', [CustomerController::class, 'search']);
 
 
 // Packages Routes
@@ -37,6 +39,7 @@ Route::get('/packages', [PackagesController::class, 'index']);
 Route::post('/packages', [PackagesController::class, 'store']);
 Route::post('/packages/{id}', [PackagesController::class, 'update']);
 Route::delete('/packages/{id}', [PackagesController::class, 'destroy']);
+Route::get('/packages/search', [PackagesController::class, 'search']);
 
 // Attendance Routes
 Route::get('/attendance', [AttendanceController::class, 'index']);
@@ -55,6 +58,7 @@ Route::get('/additionals', [AdditionalsController::class, 'index']);
 Route::post('/additionals', [AdditionalsController::class, 'store']);
 Route::post('/additionals/{id}', [AdditionalsController::class, 'update']);
 Route::delete('/additionals/{id}', [AdditionalsController::class, 'destroy']);
+Route::get('/additionals/search', [AdditionalsController::class, 'search']);
 
 
 // Food Routes
@@ -62,19 +66,17 @@ Route::get('/foods', [FoodsController::class, 'index']);
 Route::post('/foods', [FoodsController::class, 'store']);
 Route::post('/foods/{id}', [FoodsController::class, 'update']);
 Route::delete('/foods/{id}', [FoodsController::class, 'destroy']);
+Route::get('/foods/search', [FoodsController::class, 'search']);
 
 // Drink Routes
 Route::get('/drinks', [DrinksController::class, 'index']);
 Route::post('/drinks', [DrinksController::class, 'store']);
 Route::post('/drinks/{id}', [DrinksController::class, 'update']);
 Route::delete('/drinks/{id}', [DrinksController::class, 'destroy']);
+Route::get('/drinks/search', [DrinksController::class, 'search']);
 
 // Transaction Routes
 Route::get('/transactions', [TransactionsController::class, 'index']);
 Route::post('/transactions', [TransactionsController::class, 'store']);
 Route::post('/transactions/{id}', [TransactionsController::class, 'update']);
 Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy']);
-
-
-
-

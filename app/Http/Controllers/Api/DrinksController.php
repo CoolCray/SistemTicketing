@@ -10,12 +10,10 @@ class DrinksController extends Controller
 {
     public function index()
     {
-        $drinks = Drink::all();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data Minuman berhasil diambil',
-            'data' => $drinks
-        ], 200);
+        if (request()->query('all')) {
+            return Drink::all();
+        }
+        return Drink::paginate(10);
     }
 
     public function store(Request $request)
@@ -24,8 +22,7 @@ class DrinksController extends Controller
             'name' => 'required',
         ]);
 
-        if($request)
-        {
+        if ($request) {
             $drink = Drink::create($request->all());
             return response()->json([
                 'status' => 'success',
@@ -47,8 +44,7 @@ class DrinksController extends Controller
         ]);
 
         $drink = Drink::find($id);
-        if($drink)
-        {
+        if ($drink) {
             $drink->update($request->all());
             return response()->json([
                 'status' => 'success',
@@ -66,8 +62,7 @@ class DrinksController extends Controller
     public function destroy($id)
     {
         $drink = Drink::find($id);
-        if($drink)
-        {
+        if ($drink) {
             $drink->delete();
             return response()->json([
                 'status' => 'success',
@@ -80,5 +75,12 @@ class DrinksController extends Controller
             'status' => 'error',
             'message' => 'Data Minuman tidak ditemukan',
         ], 404);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        return Drink::where('name', 'like', "%{$query}%")->paginate(10);
     }
 }

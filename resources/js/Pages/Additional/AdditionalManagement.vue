@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 md:p-10 ">
+    <div class="px-6 md:px-10 pt-10">
 
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="font-bold text-2xl text-gray-800">
@@ -8,7 +8,7 @@
 
             <div class="flex gap-2">
                 <div>
-                    <input type="text" placeholder="Cari Additional" v-model="search" @keyup.enter="searchPackage"
+                    <input type="text" placeholder="Cari Additional" v-model="search" @keyup="searchAdditional"
                         class="bg-white w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                 </div>
                 <ButtonBiru @click="openModal" text="Tambah Additional" />
@@ -17,11 +17,13 @@
         </div>
 
 
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
+        <div
+            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-260px)] mt-4">
+            <div class="overflow-auto flex-1">
+                <table class="w-full text-sm text-left text-gray-600 relative">
 
-                    <thead class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200">
+                    <thead
+                        class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                         <tr>
                             <th colspan="1" class="px-6 py-4 font-bold text-center w-16">No</th>
                             <th colspan="1" class="px-6 py-4 font-bold text-center">Nama Additional</th>
@@ -65,6 +67,8 @@
             </div>
         </div>
 
+        <Pagination :currentPage="data.current_page" :totalPages="data.last_page" @update:page="fetchAdditional" />
+
     </div>
 
     <AdditionalModal v-if="showModal" @close="closeModal" @fetchAdditional="fetchAdditional" :isEdit="isEdit"
@@ -72,6 +76,7 @@
 </template>
 
 <script setup>
+import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import AdditionalModal from './AdditionalModal.vue';
 
@@ -81,6 +86,17 @@ const showModal = ref(false);
 const data = ref([]);
 const isEdit = ref(false);
 const additionalSelected = ref(null);
+
+const search = ref('');
+
+const searchAdditional = async (page = 1) => {
+    try {
+        const response = await axios.get(`api/additionals/search?query=${search.value}&page=${page}`);
+        data.value = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 const openModal = () => {
     isEdit.value = false;
@@ -93,9 +109,9 @@ const closeModal = () => {
 }
 
 
-const fetchAdditional = async () => {
+const fetchAdditional = async (page = 1) => {
     try {
-        const response = await axios.get('api/additionals');
+        const response = await axios.get(`api/additionals?page=${page}`);
         data.value = response.data;
     } catch (error) {
         console.error(error);
@@ -105,7 +121,7 @@ const fetchAdditional = async () => {
 const editAdditional = async (item) => {
     showModal.value = true;
     isEdit.value = true;
-    additionalSelected.value = item; 
+    additionalSelected.value = item;
 }
 
 const deleteAdditional = async (id) => {

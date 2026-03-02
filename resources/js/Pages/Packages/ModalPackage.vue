@@ -15,7 +15,39 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Package</label>
-                        <input v-model="name" type="text" placeholder="Masukkan Nama Package"
+                        <input v-model="form.name" type="text" placeholder="Masukkan Nama Package" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                        <input v-model="form.price" type="number" placeholder="Masukkan Harga Package" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Makanan</label>
+                            <select v-model="form.food_id" required
+                                class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="" disabled selected>Pilih Makanan</option>
+                                <option v-for="item in foods" :key="item.id" :value="item.id">{{ item.name }}</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Minuman</label>
+                            <select v-model="form.drink_id" required
+                                class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="" disabled selected>Pilih Minuman</option>
+                                <option v-for="item in drinks" :key="item.id" :value="item.id">{{ item.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Kuota / Kursi Maksimal</label>
+                        <input v-model="form.total_seats" type="number" placeholder="Batas kapasitas" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
 
@@ -48,29 +80,60 @@ const judul = computed(() => {
 });
 
 
-const name = ref('');
-
 const props = defineProps({
     showModal: Boolean,
     isEdit: Boolean,
-    foodSelected: Object
+    PackageSelected: Object
 });
 
 const emit = defineEmits(['close', 'fetchPackage']);
 
-onMounted(() => {
-    if (props.isEdit) {
-        name.value = props.foodSelected.name;
+const form = ref({
+    name: '',
+    price: '',
+    food_id: '',
+    drink_id: '',
+    total_seats: ''
+});
+
+const foods = ref([]);
+const drinks = ref([]);
+
+const fetchSelectionData = async () => {
+    try {
+        // Fetch all foods and drinks without pagination for the dropdowns
+        const resFoods = await axios.get('api/foods?all=true');
+        const resDrinks = await axios.get('api/drinks?all=true');
+        // If the backend doesn't support ?all=true we might only get page 1.
+        // Assuming backend maps these based on standard behaviour, or we just extract the nested data array.
+        foods.value = resFoods.data.data ? resFoods.data.data : resFoods.data;
+        drinks.value = resDrinks.data.data ? resDrinks.data.data : resDrinks.data;
+    } catch (e) {
+        console.error(e);
     }
-})
+};
+
+onMounted(() => {
+    fetchSelectionData();
+    if (props.isEdit && props.PackageSelected) {
+        form.value.name = props.PackageSelected.name;
+        form.value.price = props.PackageSelected.price;
+        form.value.food_id = props.PackageSelected.food_id;
+        form.value.drink_id = props.PackageSelected.drink_id;
+        form.value.total_seats = props.PackageSelected.total_seats;
+    }
+});
 
 async function submitForm() {
     try {
-        const response = await axios.post(props.isEdit ? `api/foods/${props.foodSelected.id}` : 'api/foods', {
-            name: name.value,
+        const response = await axios.post(props.isEdit ? `api/packages/${props.PackageSelected.id}` : 'api/packages', {
+            name: form.value.name,
+            price: form.value.price,
+            food_id: form.value.food_id,
+            drink_id: form.value.drink_id,
+            total_seats: form.value.total_seats
         });
         if (response.status === 200) {
-
             alert('Package berhasil ' + (props.isEdit ? 'diupdate' : 'ditambahkan'));
             emit('close');
             emit('fetchPackage');
