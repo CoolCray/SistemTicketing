@@ -11,7 +11,7 @@
             </header>
 
             <main class="p-6">
-                <form @submit.prevent="submitForm" class="space-y-4">
+                <form id="package-form" @submit.prevent="submitForm" class="space-y-4">
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Package</label>
@@ -59,9 +59,8 @@
                     class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-100 transition">
                     Batal
                 </button>
-                <button type="submit"
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-sm transition"
-                    @click="submitForm">
+                <button type="submit" form="package-form"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-sm transition">
                     Simpan Data
                 </button>
             </footer>

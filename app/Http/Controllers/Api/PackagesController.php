@@ -15,14 +15,13 @@ class PackagesController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate(
-            [
-                'name' => 'required',
-                'price' => 'required',
-                'total_seats' => 'required'
-
-            ]
-        );
+        $validated = $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'total_seats' => 'required',
+            'food_id' => 'required|exists:foods,id',
+            'drink_id' => 'required|exists:drinks,id',
+        ]);
 
         $data = Package::create($request->all());
         return response()->json([
@@ -34,11 +33,18 @@ class PackagesController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'total_seats' => 'required',
+            'food_id' => 'required|exists:foods,id',
+            'drink_id' => 'required|exists:drinks,id',
+        ]);
 
         $data = Package::find($id);
 
         if ($data) {
-            $data->update($request->all());
+            $data->update($validated);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate',

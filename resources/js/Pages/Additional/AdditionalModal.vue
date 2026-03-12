@@ -11,7 +11,7 @@
             </header>
 
             <main class="p-6">
-                <form @submit.prevent="submitForm" class="space-y-4">
+                <form id="additional-form" @submit.prevent="submitForm" class="space-y-4">
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Additional</label>
@@ -24,6 +24,13 @@
                         <input v-model="form.price" type="number" placeholder="Masukkan harga"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Kursi (Isi 0 jika tidak
+                            ada)</label>
+                        <input v-model="form.total_seats" type="number" placeholder="Masukkan jumlah kursi"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
                 </form>
             </main>
 
@@ -32,9 +39,8 @@
                     class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-100 transition">
                     Batal
                 </button>
-                <button type="submit"
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-sm transition"
-                    @click="submitForm">
+                <button type="submit" form="additional-form"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-sm transition">
                     Simpan Data
                 </button>
             </footer>
@@ -56,6 +62,7 @@ const judul = computed(() => {
 const form = ref({
     name: '',
     price: '',
+    total_seats: 0,
 })
 
 const props = defineProps({
@@ -70,6 +77,7 @@ onMounted(() => {
     if (props.isEdit) {
         form.value.name = props.additionalSelected.name;
         form.value.price = props.additionalSelected.price;
+        form.value.total_seats = props.additionalSelected.total_seats || 0;
     }
 })
 
@@ -80,6 +88,7 @@ async function submitForm() {
         const response = await axios.post(props.isEdit ? `api/additionals/${props.additionalSelected.id}` : 'api/additionals', {
             name: form.value.name,
             price: form.value.price,
+            total_seats: form.value.total_seats,
         });
         if (response.status === 200) {
 

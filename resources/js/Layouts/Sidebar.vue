@@ -118,6 +118,18 @@
                 Attendance
             </router-link>
 
+            <!-- Transaction -->
+            <router-link :to="{ name: 'transaction' }"
+                :class="['flex items-center px-4 py-3 rounded-lg transition-all duration-200 group font-medium', MenuActive('transaction') ? 'bg-OrenDamar text-white shadow-md' : 'hover:bg-orange-50 hover:text-gray-900']">
+                <svg class="w-5 h-5 mr-3 transition-colors"
+                    :class="MenuActive('transaction') ? 'text-white' : 'text-gray-400 group-hover:text-OrenDamar'"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Transactions
+            </router-link>
+
             <!-- Seat -->
             <router-link :to="{ name: 'seat' }"
                 :class="['flex items-center px-4 py-3 rounded-lg transition-all duration-200 group font-medium', MenuActive('seat') ? 'bg-OrenDamar text-white shadow-md' : 'hover:bg-orange-50 hover:text-gray-900']">

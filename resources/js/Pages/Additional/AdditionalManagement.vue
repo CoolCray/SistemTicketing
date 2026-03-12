@@ -28,6 +28,7 @@
                             <th colspan="1" class="px-6 py-4 font-bold text-center w-16">No</th>
                             <th colspan="1" class="px-6 py-4 font-bold text-center">Nama Additional</th>
                             <th colspan="1" class="px-6 py-4 font-bold text-center">Harga</th>
+                            <th colspan="1" class="px-6 py-4 font-bold text-center">Jumlah Kursi</th>
                             <th colspan="1" class="px-6 py-4 font-bold text-center w-48">Aksi</th>
                         </tr>
                     </thead>
@@ -48,7 +49,10 @@
                                 {{ item.name }}
                             </td>
                             <td colspan="1" class="px-6 py-4 font-medium text-gray-700 text-center">
-                                {{ item.price }}
+                                {{ formatRupiah(item.price) }}
+                            </td>
+                            <td colspan="1" class="px-6 py-4 font-medium text-gray-700 text-center">
+                                {{ item.total_seats || 0 }}
                             </td>
                             <td colspan="1" class="px-6 py-4 flex justify-center gap-3">
                                 <button @click="editAdditional(item)"
@@ -88,6 +92,14 @@ const isEdit = ref(false);
 const additionalSelected = ref(null);
 
 const search = ref('');
+
+
+function formatRupiah(angka) {
+    var reverse = angka.toString().split('').reverse().join(''),
+        ribuan = reverse.match(/\d{1,3}/g);
+    ribuan = ribuan.join('.').split('').reverse().join('');
+    return 'Rp ' + ribuan;
+}
 
 const searchAdditional = async (page = 1) => {
     try {

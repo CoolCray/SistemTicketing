@@ -11,6 +11,8 @@ import AttendanceManagement from '../Pages/Attendance/AttendanceManagement.vue';
 import FoodManagement from '../Pages/Food/FoodManagement.vue';
 import DrinkManagement from '../Pages/Drink/DrinkManagement.vue';
 import AdditionalManagement from '../Pages/Additional/AdditionalManagement.vue';
+import BookingWizard from '../Pages/Booking/BookingWizard.vue';
+import TransactionManagement from '../Pages/Transaction/TransactionManagement.vue';
 
 const routes = [
     {
@@ -63,6 +65,16 @@ const routes = [
         path: '/additional',
         name: 'additional',
         component:AdditionalManagement
+    },
+    {
+        path: '/booking',
+        name: 'booking',
+        component: BookingWizard
+    },
+    {
+        path: '/transaction',
+        name: 'transaction',
+        component: TransactionManagement
     }
 ];
 

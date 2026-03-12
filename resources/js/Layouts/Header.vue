@@ -8,6 +8,15 @@
 
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3 border-r border-gray-200 pr-6">
+                    <button v-if="router.currentRoute.value.path !== '/booking'" @click="goToBooking"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors duration-200 mr-2">
+                        Pesan Tiket
+                    </button>
+                    <button v-else @click="goToDashboard"
+                        class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors duration-200 mr-2">
+                        Mode Dashboard
+                    </button>
+
                     <div class="text-right hidden sm:block">
                         <h1 class="text-sm font-bold text-gray-800 leading-none mb-1">{{ user }}</h1>
                     </div>
@@ -50,6 +59,14 @@ const currentDate = new Date().toLocaleDateString('id-ID', {
 function logout() {
     localStorage.removeItem('token');
     router.push({ name: 'login' });
+}
+
+function goToBooking() {
+    router.push({ name: 'booking' });
+}
+
+function goToDashboard() {
+    router.push({ name: 'dashboard' });
 }
 </script>
 

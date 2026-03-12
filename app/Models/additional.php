@@ -10,10 +10,11 @@ class Additional extends Model
 
     protected $table = 'additionals';
 
-    protected $fillable = ['name', 'price'];
+    protected $fillable = ['name', 'price', 'total_seats'];
 
     public function transaction_additionals()
     {
-        return $this->belongsToMany(transaction_additional::class);
+        return $this->belongsToMany(Transaction::class, 'transaction_additionals', 'additional_id', 'transaction_id')
+            ->withPivot('jumlah');
     }
 }

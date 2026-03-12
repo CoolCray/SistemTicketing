@@ -1,11 +1,15 @@
 <template>
     <div class="main-container">
-        <div class="flex w-full" v-if="router.currentRoute.value.name !== 'login'">
+        <div class="flex w-full" v-if="!['login', 'booking'].includes(router.currentRoute.value.name)">
             <sidebar />
             <div class="w-full">
                 <Header />
                 <router-view></router-view>
             </div>
+        </div>
+        <div class="w-full" v-else-if="router.currentRoute.value.name === 'booking'">
+            <Header />
+            <router-view></router-view>
         </div>
         <div class="w-full" v-else>
             <router-view></router-view>
@@ -27,11 +31,10 @@ if (!token) {
     router.push('/');
 }
 
-if(routerName == 'login' && token){
+if (routerName == 'login' && token) {
     router.push(routerName);
 }
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

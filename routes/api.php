@@ -49,6 +49,7 @@ Route::delete('/attendance/{id}', [AttendanceController::class, 'destroy']);
 
 //Seats Routes
 Route::get('/seats', [SeatsController::class, 'index']);
+Route::post('/seats/update-status', [SeatsController::class, 'updateStatus']);
 Route::post('/seats', [SeatsController::class, 'store']);
 Route::post('/seats/{id}', [SeatsController::class, 'update']);
 Route::delete('/seats/{id}', [SeatsController::class, 'destroy']);
@@ -80,3 +81,4 @@ Route::get('/transactions', [TransactionsController::class, 'index']);
 Route::post('/transactions', [TransactionsController::class, 'store']);
 Route::post('/transactions/{id}', [TransactionsController::class, 'update']);
 Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy']);
+Route::get('/transactions/search', [TransactionsController::class, 'search']);

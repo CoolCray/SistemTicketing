@@ -19,8 +19,11 @@ class AdditionalsController extends Controller
             [
                 'name' => 'required',
                 'price' => 'required',
+                'total_seats' => 'nullable|integer',
             ]
         );
+
+        $validated['total_seats'] = $validated['total_seats'] ?? 0;
 
         $additional = Additional::create($validated);
 
@@ -38,8 +41,11 @@ class AdditionalsController extends Controller
             [
                 'name' => 'required',
                 'price' => 'required',
+                'total_seats' => 'nullable|integer',
             ]
         );
+
+        $validated['total_seats'] = $validated['total_seats'] ?? 0;
 
         $additional = Additional::find($id);
 
