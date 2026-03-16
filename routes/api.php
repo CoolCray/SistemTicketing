@@ -12,10 +12,13 @@ use App\Http\Controllers\Api\FoodsController;
 use App\Http\Controllers\Api\DrinksController;
 use App\Http\Controllers\Api\AdditionalsController;
 use App\Http\Controllers\Api\TransactionsController;
-
+use App\Http\Controllers\Api\DashboardController;
 
 // Auth Routes
 Route::post('/login', [AuthController::class, 'login']);
+
+// Dashboard Routes
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 
 // User Routes
@@ -42,7 +45,9 @@ Route::delete('/packages/{id}', [PackagesController::class, 'destroy']);
 Route::get('/packages/search', [PackagesController::class, 'search']);
 
 // Attendance Routes
+Route::get('/attendance/export', [AttendanceController::class, 'export']);
 Route::get('/attendance', [AttendanceController::class, 'index']);
+Route::post('/attendance/scan', [AttendanceController::class, 'scan']);
 Route::post('/attendance', [AttendanceController::class, 'store']);
 Route::post('/attendance/{id}', [AttendanceController::class, 'update']);
 Route::delete('/attendance/{id}', [AttendanceController::class, 'destroy']);
@@ -77,8 +82,9 @@ Route::delete('/drinks/{id}', [DrinksController::class, 'destroy']);
 Route::get('/drinks/search', [DrinksController::class, 'search']);
 
 // Transaction Routes
+Route::get('/transactions/export', [TransactionsController::class, 'export']);
+Route::get('/transactions/search', [TransactionsController::class, 'search']);
 Route::get('/transactions', [TransactionsController::class, 'index']);
 Route::post('/transactions', [TransactionsController::class, 'store']);
 Route::post('/transactions/{id}', [TransactionsController::class, 'update']);
 Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy']);
-Route::get('/transactions/search', [TransactionsController::class, 'search']);

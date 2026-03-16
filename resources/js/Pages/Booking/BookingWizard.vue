@@ -18,7 +18,7 @@
 
         <!-- Step 1: Packages -->
         <div v-if="currentStep === 1">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Pilih Paket <span class="text-red-500">*</span></h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Pilih Paket</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div v-if="!packages || packages.length === 0"
                     class="col-span-1 md:col-span-3 text-center text-gray-500 py-10">
@@ -146,62 +146,86 @@
 
         <!-- Step 3: Customer Form -->
         <div v-if="currentStep === 3">
-            <div class="bg-white rounded-xl shadow border border-gray-100 p-8 max-w-2xl mx-auto">
-                <h2 class="text-xl font-bold text-gray-800 mb-6">Informasi Customer</h2>
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 max-w-4xl mx-auto">
+                <div class="border-b border-gray-100 pb-5 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Informasi Customer</h2>
+                    <p class="text-gray-500 text-sm mt-1">Lengkapi data diri dan data siswa di bawah ini untuk menyelesaikan pemesanan tiket Anda.</p>
+                </div>
 
                 <form @submit.prevent="submitBooking" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Customer <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" v-model="form.name" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Customer</label>
+                                <input type="text" v-model="form.name" required placeholder="Masukkan nama lengkap"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50 focus:bg-white transition-colors py-2.5 px-3">
+                            </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email <span
-                                class="text-red-500">*</span></label>
-                        <input type="email" v-model="form.email" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                                <input type="email" v-model="form.email" required placeholder="email@contoh.com"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50 focus:bg-white transition-colors py-2.5 px-3">
+                            </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">No HP / WhatsApp <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" v-model="form.phone_number" required
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Anak (Opsional)</label>
-                            <input type="text" v-model="form.name_student"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">No HP / WhatsApp</label>
+                                <input type="text" v-model="form.phone_number" required placeholder="08xxxxxxxxxx"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50 focus:bg-white transition-colors py-2.5 px-3">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">NIS (Opsional)</label>
-                            <input type="text" v-model="form.nis"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+
+                        <!-- Right Column -->
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Anak</label>
+                                <input type="text" v-model="form.name_student" required placeholder="Nama lengkap anak"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50 focus:bg-white transition-colors py-2.5 px-3">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">NIS</label>
+                                <input type="text" v-model="form.nis" required placeholder="Nomor Induk Siswa"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50 focus:bg-white transition-colors py-2.5 px-3">
+                            </div>
                         </div>
                     </div>
 
                     <!-- Summary Order -->
-                    <div class="bg-indigo-50 p-4 rounded-lg mt-6">
-                        <h3 class="font-bold text-indigo-900 mb-2">Ringkasan Pesanan</h3>
-                        <div class="text-sm text-indigo-800 space-y-1">
-                            <p><strong>Paket:</strong> {{ selectedPackage.name }} ({{
-                                formatRupiah(selectedPackage.price) }})</p>
-                            <p v-if="selectedAdditionals.length > 0"><strong>Additional:</strong> {{
-                                selectedAdditionals.map(a => a.name).join(', ')}}</p>
-                            <p><strong>Kursi Dipilih:</strong> {{selectedSeats.map(s => s.id).join(', ')}}</p>
-                            <p class="text-lg font-bold text-indigo-900 mt-2">Total Harga: {{
-                                formatRupiah(calculateTotalPrice()) }}</p>
+                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 p-6 rounded-xl mt-8 shadow-inner">
+                        <h3 class="font-bold text-indigo-900 mb-4 text-lg flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            Ringkasan Pesanan
+                        </h3>
+                        <div class="text-sm text-indigo-800 space-y-3">
+                            <div class="flex justify-between items-center border-b border-indigo-100/50 pb-2">
+                                <span class="font-medium">Paket Utama</span>
+                                <span class="font-bold">{{ selectedPackage.name }} ({{ formatRupiah(selectedPackage.price) }})</span>
+                            </div>
+                            <div v-if="selectedAdditionals.length > 0" class="flex justify-between items-center border-b border-indigo-100/50 pb-2">
+                                <span class="font-medium">Additional</span>
+                                <span class="font-semibold text-right">{{ selectedAdditionals.map(a => a.name).join(', ')}}</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-indigo-100/50 pb-2">
+                                <span class="font-medium">Kursi Dipilih</span>
+                                <span class="font-semibold">{{selectedSeats.map(s => s.id).join(', ')}}</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-lg font-bold text-indigo-900">Total Harga</span>
+                                <span class="text-xl font-black text-indigo-700 bg-indigo-100 px-3 py-1 rounded-lg">{{ formatRupiah(calculateTotalPrice()) }}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-8 flex justify-end">
+                    <div class="mt-8 flex justify-end pt-4 border-t border-gray-100">
                         <button type="submit" :disabled="isSubmitting"
-                            class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition disabled:opacity-50">
-                            {{ isSubmitting ? 'Memproses...' : 'Proses Booking' }}
+                            class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2">
+                            <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            {{ isSubmitting ? 'Memproses Pesanan...' : 'Selesaikan Booking' }}
+                            <svg v-if="!isSubmitting" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
                     </div>
                 </form>

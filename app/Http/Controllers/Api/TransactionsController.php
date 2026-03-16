@@ -4,11 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Log;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketEmail;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionsExport;
 
 class TransactionsController extends Controller
 {
+    public function export() 
+    {
+        return Excel::download(new TransactionsExport, 'data_transaksi.xlsx');
+    }
+
     public function index()
     {
         $transactions = Transaction::with(['customers', 'packages', 'seats', 'transaction_additionals'])
@@ -33,6 +45,13 @@ class TransactionsController extends Controller
             })->unique('id')->values();
 
             $first->setRelation('transaction_additionals', $additionals);
+
+            // Calculate Price
+            $packagePrice = $first->packages ? $first->packages->price : 0;
+            $additionalPrice = $additionals->sum(function($a) {
+                return $a->price * $a->pivot->jumlah;
+            });
+            $first->setAttribute('total_price', $packagePrice + $additionalPrice);
 
             return $first;
         })->values();
@@ -97,6 +116,8 @@ class TransactionsController extends Controller
                 'package_id' => $request->package_id,
                 'seat_id' => $seatId,
                 'additional_id' => null,
+                'checkin_token' => Str::uuid()->toString(),
+                'checkout_token' => Str::uuid()->toString(),
             ]);
 
             if ($isFirstSeat && $request->has('additionals') && is_array($request->additionals)) {
@@ -114,6 +135,16 @@ class TransactionsController extends Controller
 
             $isFirstSeat = false;
             $transactions[] = $transaction;
+        }
+
+        // Load relationships before sending email
+        $transactionsCollection = Transaction::with(['packages', 'seats'])->whereIn('id', collect($transactions)->pluck('id'))->get();
+        
+        // Send email to the customer
+        try {
+            Mail::to($customer->email)->send(new TicketEmail($customer, $transactionsCollection));
+        } catch (\Exception $e) {
+            Log::error('Failed to send ticket email: ' . $e->getMessage());
         }
 
         return response()->json([

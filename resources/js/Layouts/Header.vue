@@ -18,12 +18,12 @@
                     </button>
 
                     <div class="text-right hidden sm:block">
-                        <h1 class="text-sm font-bold text-gray-800 leading-none mb-1">{{ user }}</h1>
+                        <h1 class="text-sm font-bold text-gray-800 leading-none mb-1">{{ user || 'Admin' }}</h1>
                     </div>
 
                     <div
                         class="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold shadow-sm ring-2 ring-white">
-                        {{ user.charAt(0).toUpperCase() }}
+                        {{ user ? user.charAt(0).toUpperCase() : 'A' }}
                     </div>
                 </div>
 

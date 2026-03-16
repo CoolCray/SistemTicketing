@@ -6,10 +6,18 @@
                 Data Transaksi
             </h1>
 
-            <div>
+            <div class="flex gap-2">
                 <input type="text" placeholder="Cari Transaksi" v-model="search" @keyup="searchTransaction"
                     class="bg-white w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                <button @click="exportExcel"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-md transition whitespace-nowrap hidden sm:block">
+                    Export Excel
+                </button>
             </div>
+            <button @click="exportExcel"
+                    class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-md transition sm:hidden">
+                    Export Excel
+            </button>
         </div>
 
         <div
@@ -25,13 +33,14 @@
                             <th scope="col" class="px-6 py-4 font-bold">Paket</th>
                             <th scope="col" class="px-6 py-4 font-bold">Kursi</th>
                             <th scope="col" class="px-6 py-4 font-bold">Additional</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Aksi</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Harga</th>
+                            <th scope="col" class="px-6 py-4 font-bold text-center">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr v-if="!data.data || data.data.length === 0">
-                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-8 text-center text-gray-500">
                                 Belum ada data Transaksi yang terdaftar.
                             </td>
                         </tr>
@@ -57,10 +66,12 @@
                             </td>
                             <td class="px-6 py-4 text-gray-500 text-xs">
                                 <span v-if="item.transaction_additionals && item.transaction_additionals.length > 0">
-                                    {{item.transaction_additionals.map(a => `${a.name} (Jumlah:
-                                    ${a.pivot.jumlah})`).join(', ')}}
+                                    {{item.transaction_additionals.map(a => `${a.name} (${a.pivot.jumlah})`).join(', ')}}
                                 </span>
                                 <span v-else>-</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-700 font-semibold whitespace-nowrap">
+                                {{ formatCurrency(item.total_price) }}
                             </td>
                             <td class="px-6 py-4 flex justify-center gap-3">
                                 <button @click="editTransaction(item)"
@@ -99,7 +110,6 @@ const isEdit = ref(false);
 const transactionSelected = ref(null);
 const search = ref('');
 
-
 const data = ref({
     data: [],
     current_page: 1,
@@ -122,6 +132,10 @@ const deleteTransaction = async (id) => {
     }
 }
 
+const exportExcel = () => {
+    window.open('/api/transactions/export', '_blank');
+};
+
 const fetchTransactions = async (page = 1) => {
     try {
         const response = await axios.get(`/api/transactions?page=${page}`);
@@ -130,6 +144,40 @@ const fetchTransactions = async (page = 1) => {
         console.error("Gagal mengambil data transaksi", error);
     }
 };
+
+const formatCurrency = (value) => {
+    if (!value) return 'Rp 0';
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+    }).format(value);
+};
+
+const searchTransaction = async () => {
+    if (search.value.length === 0) {
+        fetchTransactions();
+        return;
+    }
+    
+    // Fall back to original search API logic if configured
+    try {
+        const response = await axios.get(`/api/transactions/search?query=${search.value}`);
+        // Handling the fact that search might not return pagination structure natively
+        if(response.data.data) {
+             data.value = response.data;
+        } else {
+             data.value = {
+                 data: response.data,
+                 current_page: 1,
+                 last_page: 1,
+                 per_page: 100
+             };
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 const formatDate = (dateString) => {
     if (!dateString) return '-';

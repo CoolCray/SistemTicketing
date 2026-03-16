@@ -13,4 +13,9 @@ class Attendance extends Model
         'attendance_time',
         'leave_time',
     ];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
 }

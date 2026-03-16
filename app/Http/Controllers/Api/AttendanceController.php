@@ -5,17 +5,85 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\Transaction;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AttendancesExport;
 
 class AttendanceController extends Controller
 {
+    public function export()
+    {
+        return Excel::download(new AttendancesExport, 'data_kehadiran.xlsx');
+    }
+
     public function index()
     {
-        $data = Attendance::all();
+        $data = Attendance::with(['transaction.customers', 'transaction.seats'])->get();
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil diambil',
             'data' => $data
         ]);
+    }
+
+    public function scan(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $token = $request->token;
+
+        // Cek Check-in
+        $transactionIn = Transaction::where('checkin_token', $token)->first();
+        if ($transactionIn) {
+            $attendance = Attendance::firstOrCreate(
+                ['transaction_id' => $transactionIn->id],
+                ['attendance_time' => now()]
+            );
+
+            if (!$attendance->wasRecentlyCreated && !$attendance->attendance_time) {
+                $attendance->update(['attendance_time' => now()]);
+            } else if (!$attendance->wasRecentlyCreated) {
+                return response()->json(['status' => 'error', 'message' => 'Sudah melakukan Check-in.'], 400);
+            }
+
+            $attendance->load(['transaction.customers', 'transaction.seats']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Check-in berhasil!',
+                'type' => 'checkin',
+                'data' => $attendance
+            ]);
+        }
+
+        // Cek Check-out
+        $transactionOut = Transaction::where('checkout_token', $token)->first();
+        if ($transactionOut) {
+            $attendance = Attendance::where('transaction_id', $transactionOut->id)->first();
+            
+            if (!$attendance || !$attendance->attendance_time) {
+                return response()->json(['status' => 'error', 'message' => 'Belum melakukan Check-in.'], 400);
+            }
+
+            if ($attendance->leave_time) {
+                return response()->json(['status' => 'error', 'message' => 'Sudah melakukan Check-out.'], 400);
+            }
+
+            $attendance->update(['leave_time' => now()]);
+            
+            $attendance->load(['transaction.customers', 'transaction.seats']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Check-out berhasil!',
+                'type' => 'checkout',
+                'data' => $attendance
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Token QR tidak valid.'], 404);
     }
 
     public function store(Request $request)
