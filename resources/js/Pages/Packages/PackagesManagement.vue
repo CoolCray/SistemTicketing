@@ -17,21 +17,19 @@
 
         </div>
 
-        <div
-            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-260px)] mt-4">
-            <div class="overflow-auto flex-1">
-                <table class="w-full text-sm text-left text-gray-600 relative">
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col sm:h-[calc(100vh-260px)] mt-4 mb-4">
+            <div class="overflow-auto max-h-[calc(100vh-220px)] w-full">
+                <table class="w-full text-sm text-left text-gray-600 relative min-w-max">
 
-                    <thead
-                        class="text-xs text-gray-700 uppercase bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Nama Package</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Harga</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Total Kursi</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Makanan</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Minuman</th>
-                            <th scope="col" class="px-6 py-4 font-bold text-center w-48">Aksi</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap w-16">No</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap">Nama Package</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap">Harga</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap">Total Kursi</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap">Makanan</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap">Minuman</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap text-center w-48">Aksi</th>
                         </tr>
                     </thead>
 
@@ -43,26 +41,26 @@
                         </tr>
 
                         <tr v-else v-for="(item, index) in data.data" :key="item.id || index"
-                            class="hover:bg-blue-50 transition duration-150">
-                            <td class="px-6 py-4 font-medium text-gray-900">
+                            class="hover:bg-blue-50 transition duration-150 border-b border-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ index + 1 }}
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-700">
+                            <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
                                 {{ item.name }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500">
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
                                 {{ formatRupiah(item.price) }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500">
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
                                 {{ item.total_seats }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500">
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
                                 {{ item.food ? item.food.name : '-' }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500">
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
                                 {{ item.drink ? item.drink.name : '-' }}
                             </td>
-                            <td class="px-6 py-4 flex justify-center gap-3">
+                            <td class="px-6 py-4 flex justify-center gap-3 whitespace-nowrap">
                                 <button @click="editPackage(item)"
                                     class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
                                     Edit

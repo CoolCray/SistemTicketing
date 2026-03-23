@@ -45,6 +45,7 @@ Route::delete('/packages/{id}', [PackagesController::class, 'destroy']);
 Route::get('/packages/search', [PackagesController::class, 'search']);
 
 // Attendance Routes
+Route::get('/attendance/search', [AttendanceController::class, 'search']);
 Route::get('/attendance/export', [AttendanceController::class, 'export']);
 Route::get('/attendance', [AttendanceController::class, 'index']);
 Route::post('/attendance/scan', [AttendanceController::class, 'scan']);
@@ -83,6 +84,7 @@ Route::get('/drinks/search', [DrinksController::class, 'search']);
 
 // Transaction Routes
 Route::get('/transactions/export', [TransactionsController::class, 'export']);
+Route::get('/transactions/{id}/ticket', [TransactionsController::class, 'downloadTicket']);
 Route::get('/transactions/search', [TransactionsController::class, 'search']);
 Route::get('/transactions', [TransactionsController::class, 'index']);
 Route::post('/transactions', [TransactionsController::class, 'store']);

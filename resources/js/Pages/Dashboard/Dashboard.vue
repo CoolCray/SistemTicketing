@@ -18,7 +18,7 @@
             <!-- Tickets Sold Card -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1">Total Tiket Terjual</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Total Kursi Yang Terjual</p>
                     <h3 class="text-2xl font-bold text-gray-800">{{ dashboardData.total_tickets_sold }}</h3>
                 </div>
                 <div class="p-3 bg-blue-100 rounded-full">
@@ -39,20 +39,20 @@
         </div>
 
         <!-- Recent Transactions Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden mb-4">
             <div class="px-6 py-4 border-b border-gray-100">
                 <h2 class="text-lg font-semibold text-gray-800">Transaksi Terbaru</h2>
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pemesan</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Paket</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor Kursi</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Beli</th>
+            <div class="overflow-auto w-full max-h-[400px]">
+                <table class="w-full text-sm text-left text-gray-600 relative">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="px-6 py-4 font-bold whitespace-nowrap w-16">No</th>
+                            <th class="px-6 py-4 font-bold">Nama Pemesan</th>
+                            <th class="px-6 py-4 font-bold">Email</th>
+                            <th class="px-6 py-4 font-bold">Paket</th>
+                            <th class="px-6 py-4 font-bold">Nomor Kursi</th>
+                            <th class="px-6 py-4 font-bold">Tanggal Beli</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -66,7 +66,7 @@
                                 Belum ada transaksi.
                             </td>
                         </tr>
-                        <tr v-for="(tx, index) in dashboardData.recent_transactions" :key="index" class="hover:bg-gray-50 transition-colors">
+                        <tr v-for="(tx, index) in dashboardData.recent_transactions" :key="index" class="hover:bg-gray-50 transition-colors border-b border-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-900">{{ index + 1 }}</td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ tx.customer_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ tx.customer_email }}</td>

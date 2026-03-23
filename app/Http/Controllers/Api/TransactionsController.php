@@ -13,12 +13,38 @@ use App\Mail\TicketEmail;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionsController extends Controller
 {
     public function export() 
     {
         return Excel::download(new TransactionsExport, 'data_transaksi.xlsx');
+    }
+
+    public function downloadTicket($id)
+    {
+        $transaction = Transaction::with(['customers', 'packages', 'seats'])->find($id);
+
+        if (!$transaction) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Transaksi tidak ditemukan.'
+            ], 404);
+        }
+
+        $transactionsCollection = Transaction::with(['customers', 'packages', 'seats'])
+            ->where('customer_id', $transaction->customer_id)
+            ->where('package_id', $transaction->package_id)
+            ->where('created_at', $transaction->created_at)
+            ->get();
+            
+        $pdf = Pdf::loadView('pdf.ticket', [
+            'customer' => $transaction->customers,
+            'transactions' => $transactionsCollection
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->download('E-Ticket_'.$transaction->customers->name.'.pdf');
     }
 
     public function index()
@@ -213,10 +239,22 @@ class TransactionsController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->query('q');
-        $transactions = Transaction::with(['customers', 'packages', 'seats', 'transaction_additionals'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $searchTerm = $request->query('query') ?? $request->query('q');
+
+        $transactionsQuery = Transaction::with(['customers', 'packages', 'seats', 'transaction_additionals'])
+            ->orderBy('created_at', 'desc');
+
+        if ($searchTerm) {
+            $transactionsQuery->whereHas('customers', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('email', 'like', "%{$searchTerm}%")
+                  ->orWhere('phone_number', 'like', "%{$searchTerm}%");
+            })->orWhereHas('packages', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $transactions = $transactionsQuery->get();
 
         $grouped = $transactions->groupBy(function ($item) {
             return $item->customer_id . '_' . $item->package_id . '_' . $item->created_at->format('Y-m-d H:i');
@@ -236,6 +274,13 @@ class TransactionsController extends Controller
             })->unique('id')->values();
 
             $first->setRelation('transaction_additionals', $additionals);
+
+            // Calculate Price
+            $packagePrice = $first->packages ? $first->packages->price : 0;
+            $additionalPrice = $additionals->sum(function($a) {
+                return $a->price * $a->pivot->jumlah;
+            });
+            $first->setAttribute('total_price', $packagePrice + $additionalPrice);
 
             return $first;
         })->values();

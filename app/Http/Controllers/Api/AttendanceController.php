@@ -18,12 +18,24 @@ class AttendanceController extends Controller
 
     public function index()
     {
-        $data = Attendance::with(['transaction.customers', 'transaction.seats'])->get();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil diambil',
-            'data' => $data
-        ]);
+        return Attendance::with(['transaction.customers', 'transaction.seats'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        return Attendance::with(['transaction.customers', 'transaction.seats'])
+            ->whereHas('transaction.customers', function($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('email', 'like', "%{$query}%");
+            })
+            ->orWhereHas('transaction.seats', function($q) use ($query) {
+                $q->where('seat_number', 'like', "%{$query}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
     }
 
     public function scan(Request $request)

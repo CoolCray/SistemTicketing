@@ -1,9 +1,8 @@
 <template>
     <div class="px-6 md:px-10 pt-10">
-
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="font-bold text-2xl text-gray-800">
-                Data Transaksi
+                Transactions Management
             </h1>
 
             <div class="flex gap-2">
@@ -21,20 +20,19 @@
         </div>
 
         <div
-            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-260px)] mt-4">
-            <div class="overflow-auto max-h-[calc(100vh-220px)]">
+            class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col sm:h-[calc(100vh-260px)] mt-4 mb-4">
+            <div class="overflow-auto max-h-[calc(100vh-220px)] w-full">
                 <table class="w-full text-sm text-left text-gray-600 relative">
-                    <thead
-                        class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap w-16">No</th>
                             <th scope="col" class="px-6 py-4 font-bold">Waktu Booking</th>
                             <th scope="col" class="px-6 py-4 font-bold">Customer</th>
                             <th scope="col" class="px-6 py-4 font-bold">Paket</th>
                             <th scope="col" class="px-6 py-4 font-bold">Kursi</th>
                             <th scope="col" class="px-6 py-4 font-bold">Additional</th>
                             <th scope="col" class="px-6 py-4 font-bold">Harga</th>
-                            <th scope="col" class="px-6 py-4 font-bold text-center">Aksi</th>
+                            <th scope="col" class="px-6 py-4 font-bold whitespace-nowrap text-center">Aksi</th>
                         </tr>
                     </thead>
 
@@ -47,7 +45,7 @@
 
                         <tr v-else v-for="(item, index) in data.data" :key="item.id"
                             class="hover:bg-blue-50 transition duration-150 border-b border-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
                             </td>
                             <td class="px-6 py-4 text-gray-700">
@@ -73,13 +71,17 @@
                             <td class="px-6 py-4 text-gray-700 font-semibold whitespace-nowrap">
                                 {{ formatCurrency(item.total_price) }}
                             </td>
-                            <td class="px-6 py-4 flex justify-center gap-3">
+                            <td class="px-6 py-4 flex justify-center gap-2 whitespace-nowrap">
+                                <button @click="downloadTicket(item.id)"
+                                    class="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
+                                    Tiket
+                                </button>
                                 <button @click="editTransaction(item)"
-                                    class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
+                                    class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
                                     Edit
                                 </button>
                                 <button @click="deleteTransaction(item.id)"
-                                    class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
+                                    class="px-3 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-md shadow transition duration-200">
                                     Hapus
                                 </button>
                             </td>
@@ -131,6 +133,10 @@ const deleteTransaction = async (id) => {
         console.error(error);
     }
 }
+
+const downloadTicket = (id) => {
+    window.open(`/api/transactions/${id}/ticket`, '_blank');
+};
 
 const exportExcel = () => {
     window.open('/api/transactions/export', '_blank');

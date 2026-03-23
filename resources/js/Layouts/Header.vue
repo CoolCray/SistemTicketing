@@ -48,7 +48,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const user = ref(localStorage.getItem('user'));
 
-// Tambahan: Menampilkan tanggal hari ini
 const currentDate = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
     year: 'numeric',
@@ -71,7 +70,6 @@ function goToDashboard() {
 </script>
 
 <style scoped>
-/* Pastikan font terlihat tajam */
 header {
     -webkit-font-smoothing: antialiased;
 }
