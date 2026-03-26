@@ -83,18 +83,22 @@
 
     <ModalPackage v-if="showModal" @close="closeModal" @fetchPackage="fetchPackage" :isEdit="isEdit"
         :PackageSelected="PackageSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deletePackageConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalPackage from './ModalPackage.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 const data = ref([]);
 const search = ref('');
 
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const isEdit = ref(false);
 const PackageSelected = ref(null);
 
@@ -125,9 +129,16 @@ function formatRupiah(angka) {
     return 'Rp ' + ribuan;
 }
 
-const deletePackage = async (id) => {
+const deletePackage = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deletePackageConfirm = async () => {
     try {
-        const response = await axios.delete(`api/packages/${id}`);
+        const response = await axios.delete(`api/packages/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchPackage();
     }
     catch (error) {

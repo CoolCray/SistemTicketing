@@ -67,17 +67,21 @@
 
     <ModalFood v-if="showModal" @close="closeModal" @fetchFoods="fetchFoods" :isEdit="isEdit"
         :foodSelected="foodSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteFoodConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalFood from './ModalFood.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 
 import { ref, onMounted } from 'vue';
 
 const search = ref('');
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const data = ref([]);
 const isEdit = ref(false);
 const foodSelected = ref(null);
@@ -118,9 +122,16 @@ const editFood = async (item) => {
     foodSelected.value = item;
 }
 
-const deleteFood = async (id) => {
+const deleteFood = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteFoodConfirm = async () => {
     try {
-        const response = await axios.delete(`api/foods/${id}`);
+        const response = await axios.delete(`api/foods/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchFoods();
     } catch (error) {
         console.error(error);

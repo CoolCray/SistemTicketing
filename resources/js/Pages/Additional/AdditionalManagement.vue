@@ -75,16 +75,20 @@
 
     <AdditionalModal v-if="showModal" @close="closeModal" @fetchAdditional="fetchAdditional" :isEdit="isEdit"
         :additionalSelected="additionalSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteAdditionalConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import AdditionalModal from './AdditionalModal.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 
 import { ref, onMounted } from 'vue';
 
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const data = ref([]);
 const isEdit = ref(false);
 const additionalSelected = ref(null);
@@ -134,9 +138,16 @@ const editAdditional = async (item) => {
     additionalSelected.value = item;
 }
 
-const deleteAdditional = async (id) => {
+const deleteAdditional = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteAdditionalConfirm = async () => {
     try {
-        const response = await axios.delete(`api/additionals/${id}`);
+        const response = await axios.delete(`api/additionals/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchAdditional();
     } catch (error) {
         console.error(error);

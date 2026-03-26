@@ -81,17 +81,21 @@
 
     <ModalCustomer v-if="showModal" @close="closeModal" @fetchCustomer="fetchCustomer" :isEdit="isEdit"
         :customerSelected="customerSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteCustomerConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalCustomer from './ModalCustomer.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 const data = ref([]);
 const search = ref('');
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const isEdit = ref(false);
 const customerSelected = ref(null);
 
@@ -116,9 +120,16 @@ const fetchCustomer = async (page = 1) => {
     }
 };
 
-const deleteCustomer = async (id) => {
+const deleteCustomer = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteCustomerConfirm = async () => {
     try {
-        const response = await axios.delete(`api/customer/${id}`);
+        const response = await axios.delete(`api/customer/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchCustomer();
     }
     catch (error) {

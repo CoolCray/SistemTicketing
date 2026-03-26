@@ -67,16 +67,20 @@
 
     <ModalDrink v-if="showModal" @close="closeModal" @fetchDrink="fetchDrink" :isEdit="isEdit"
         :drinkSelected="drinkSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteDrinkConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalDrink from './ModalDrink.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 
 import { ref, onMounted } from 'vue';
 
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const data = ref([]);
 const isEdit = ref(false);
 const drinkSelected = ref(null);
@@ -118,9 +122,16 @@ const editDrink = async (item) => {
     drinkSelected.value = item;
 }
 
-const deleteDrink = async (id) => {
+const deleteDrink = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteDrinkConfirm = async () => {
     try {
-        const response = await axios.delete(`api/drinks/${id}`);
+        const response = await axios.delete(`api/drinks/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchDrink();
     } catch (error) {
         console.error(error);

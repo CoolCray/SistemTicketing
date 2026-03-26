@@ -98,6 +98,7 @@
 
         <ModalTransaction :showModal="showModal" :transactionSelected="transactionSelected" @close="showModal = false"
             @fetchTransactions="fetchTransactions" />
+        <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteTransactionConfirm" />
     </div>
 </template>
 
@@ -106,8 +107,11 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Pagination from '../../Components/Pagination.vue';
 import ModalTransaction from './ModalTransaction.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const isEdit = ref(false);
 const transactionSelected = ref(null);
 const search = ref('');
@@ -125,9 +129,16 @@ const editTransaction = async (item) => {
     transactionSelected.value = item;
 }
 
-const deleteTransaction = async (id) => {
+const deleteTransaction = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteTransactionConfirm = async () => {
     try {
-        const response = await axios.delete(`/api/transactions/${id}`);
+        const response = await axios.delete(`/api/transactions/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchTransactions();
     } catch (error) {
         console.error(error);

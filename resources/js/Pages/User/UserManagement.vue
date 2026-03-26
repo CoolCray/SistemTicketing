@@ -70,17 +70,21 @@
 
     <ModalUser v-if="showModal" :showModal="showModal" @close="closeModal" @fetchUser="fetchUser" :isEdit="isEdit"
         :userSelected="userSelected" />
+    <ModalDelete :showModal="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteUserConfirm" />
 </template>
 
 <script setup>
 import Pagination from '../../Components/Pagination.vue';
 import ButtonBiru from '../../Components/ButtonBiru.vue';
 import ModalUser from './ModalUser.vue';
+import ModalDelete from '../../Components/ModalDelete.vue';
 import { ref, onMounted } from 'vue';
 
 const data = ref([]);
 const search = ref('');
 const showModal = ref(false);
+const showDeleteModal = ref(false);
+const itemToDelete = ref(null);
 const isEdit = ref(false);
 const userSelected = ref(null);
 const currentPage = ref(1);
@@ -106,15 +110,21 @@ const fetchUser = async (page = 1) => {
     }
 };
 
-const deleteUser = async (id) => {
+const deleteUser = (id) => {
+    itemToDelete.value = id;
+    showDeleteModal.value = true;
+};
+
+const deleteUserConfirm = async () => {
     try {
-        const response = await axios.delete(`api/user/${id}`);
+        const response = await axios.delete(`api/user/${itemToDelete.value}`);
+        showDeleteModal.value = false;
+        itemToDelete.value = null;
         fetchUser();
     }
     catch (error) {
         console.log(error);
     }
-
 };
 
 const updateUser = async (item) => {
