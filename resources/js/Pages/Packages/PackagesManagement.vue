@@ -139,6 +139,7 @@ const deletePackageConfirm = async () => {
         const response = await axios.delete(`api/packages/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('Package berhasil dihapus');
         fetchPackage();
     }
     catch (error) {

@@ -130,6 +130,7 @@ const deleteCustomerConfirm = async () => {
         const response = await axios.delete(`api/customer/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('Customer berhasil dihapus');
         fetchCustomer();
     }
     catch (error) {

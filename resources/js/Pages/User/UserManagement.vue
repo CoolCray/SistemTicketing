@@ -120,6 +120,7 @@ const deleteUserConfirm = async () => {
         const response = await axios.delete(`api/user/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('User berhasil dihapus');
         fetchUser();
     }
     catch (error) {

@@ -132,6 +132,7 @@ const deleteFoodConfirm = async () => {
         const response = await axios.delete(`api/foods/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('Makanan berhasil dihapus');
         fetchFoods();
     } catch (error) {
         console.error(error);

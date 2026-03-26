@@ -139,6 +139,7 @@ const deleteTransactionConfirm = async () => {
         const response = await axios.delete(`/api/transactions/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('Transaksi berhasil dihapus');
         fetchTransactions();
     } catch (error) {
         console.error(error);

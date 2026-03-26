@@ -148,6 +148,7 @@ const deleteAdditionalConfirm = async () => {
         const response = await axios.delete(`api/additionals/${itemToDelete.value}`);
         showDeleteModal.value = false;
         itemToDelete.value = null;
+        alert('Additional berhasil dihapus');
         fetchAdditional();
     } catch (error) {
         console.error(error);
