@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col min-h-screen h-full w-64 bg-white shadow-xl relative text-gray-700">
         <div class="flex justify-center items-center border-b border-gray-200 shadow-sm bg-white py-4 h-20">
-            <img src="/storage/app/public/Logo.png" alt="Company Logo" class="h-10 w-auto object-contain ">
+            <img src="https://damarbalischool.com/wp-content/uploads/2024/11/277816989_113080298023159_2543903002037675813_n.jpg" alt="Company Logo" class="h-10 w-auto object-contain ">
         </div>
 
         <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">

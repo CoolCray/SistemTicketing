@@ -6,7 +6,7 @@
         body { font-family: sans-serif; font-size: 14px; }
         .page-break { page-break-after: always; }
         .ticket { border: 1px dashed #333; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
-        .header { background: #4f46e5; color: white; padding: 10px;text-align: center; }
+        .header { background: #00b6feff; color: white; padding: 10px;text-align: center; }
         .details { margin-top: 20px; }
         .details p { margin: 5px 0;}
         .qr-container { width: 100%; margin-top: 20px; text-align: center;}
@@ -39,11 +39,10 @@
                 </div>
             </div>
             
-            <!-- Page break before check-out QR -->
             <div class="page-break"></div>
             
             <div class="qr-box mt-4">
-                <div class="header" style="margin-bottom: 20px;">
+                <div class="header" style="margin-bottom: 20px; background-color: orange;">
                     <h2>Damar Bali School Ticket - Check Out</h2>
                 </div>
                 <div class="qr-title">Check-out QR (Scan to Leave)</div>
